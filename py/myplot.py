@@ -13,7 +13,7 @@ def plot_d_ang(slot, slot_ref, key, dt, table):
     ok1 = table['slot'] == slot
     ok2 = table['slot'] == slot_ref
     
-    fig = plt.figure(figsize=(13, 4))
+    fig = plt.figure(figsize=(9, 2.5))
     
     for i, method in enumerate(methods):
         plt.subplot(1, 3, i + 1)
@@ -134,7 +134,7 @@ def plot_bgd_image(img, img_number, row0, col0, img_size):
 def plot_bgd_images(table, slot, n_start, n_stop, img_size, method):
     ok = table['bgd_type'] == method
     ok1 = table['slot'] == slot
-    fig = plt.figure(figsize=(12, 25))
+    fig = plt.figure(figsize=(8.5, 25))
     for i, aa in enumerate(table[ok * ok1]['bgdimg'][0][n_start:n_stop]):
         plt.subplot(12, 10, i + 1)
         plot_bgd_image(aa, n_start + i, table['row0'][0], table['col0'][0], img_size)
@@ -177,7 +177,7 @@ def plot_bgd_patch(deque_dict, img_number, row0, col0, img_size):
 def plot_bgd_patches(table, slot, n_start, n_stop, img_size, method):
     ok = table['bgd_type'] == method
     ok1 = table['slot'] == slot
-    fig = plt.figure(figsize=(12, 25))
+    fig = plt.figure(figsize=(8.5, 25))
     for i, aa in enumerate(table[ok * ok1]['deque_dict'][0][n_start:n_stop]):
         plt.subplot(12, 10, i + 1)
         plot_bgd_patch(aa, n_start + i, table['row0'][0], table['col0'][0], img_size)

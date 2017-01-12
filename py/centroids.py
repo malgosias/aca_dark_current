@@ -9,7 +9,7 @@ from astropy.table import Table
 from bgd_classes import *
 
 
-def centroids(slot, slot_data, img_size, bgd_object, sim=False, hot_pixels=None, nframes=1000):
+def centroids(slot, slot_data, img_size, bgd_object, hot_pixels=None, nframes=1000):
     # Calls:
     #     get_centroids
    
