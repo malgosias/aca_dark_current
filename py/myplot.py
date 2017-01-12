@@ -13,7 +13,7 @@ def plot_d_ang(slot, slot_ref, key, dt, table):
     ok1 = table['slot'] == slot
     ok2 = table['slot'] == slot_ref
     
-    fig = plt.figure(figsize=(9, 2.5))
+    fig = plt.figure(figsize=(8, 2.5))
     
     for i, method in enumerate(methods):
         plt.subplot(1, 3, i + 1)
