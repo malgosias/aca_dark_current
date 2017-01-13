@@ -30,7 +30,7 @@ def simulate_aca_l0(img_size, hot_pixels=None, nframes=1000, delta_t=4.1, integ=
                 rr = key[0] - row0[i]
                 cc = key[1] - col0[i]
                 if rr in range(8) and cc in range(8):
-                    imgraw[rr, cc] = imgraw[rr, cc] + val        
+                    imgraw[rr, cc] = imgraw[rr, cc] + val[i]
         
         imgraw = imgraw.reshape(1, img_size2)[0]
         mask = img_size2 * [0]

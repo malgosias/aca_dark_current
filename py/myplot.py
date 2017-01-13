@@ -113,13 +113,13 @@ def plot_star_image(data):
 
 
 def plot_bgd_image(img, img_number, row0, col0, img_size):
-
+    
     r_min = row0.min()
     r_max = row0.max() + img_size
     c_min = col0.min()
     c_max = col0.max() + img_size
     
-    data = np.zeros((c_max - c_min + 1, r_max - r_min + 1))
+    data = -100 * np.ones((c_max - c_min, r_max - r_min))
 
     dr = row0[img_number] - r_min
     dc = col0[img_number] - c_min
@@ -131,19 +131,30 @@ def plot_bgd_image(img, img_number, row0, col0, img_size):
     return
 
 
-def plot_bgd_images(table, slot, n_start, n_stop, img_size, method):
-    ok = table['bgd_type'] == method
-    ok1 = table['slot'] == slot
+def plot_bgd_images(table, slot, mag, n_start, n_stop, img_size, method):
+
+    ok1 = table['bgd_type'] == method
+    ok2 = table['slot'] == slot
+    ok3 = table['mag'] == mag
+    ok = ok1 * ok2 * ok3
+
     fig = plt.figure(figsize=(8.5, 25))
-    for i, aa in enumerate(table[ok * ok1]['bgdimg'][0][n_start:n_stop]):
+
+    for i, aa in enumerate(table[ok]['bgdimg'][0][n_start:n_stop]):
         plt.subplot(12, 10, i + 1)
-        plot_bgd_image(aa, n_start + i, table['row0'][0], table['col0'][0], img_size)
-        plt.title('t{}:\n{}, {}'.format(n_start + i, table['row0'][0][i], table['col0'][0][i]));
+        row0 = table[ok]['row0'][0]
+        col0 = table[ok]['col0'][0]
+        index = i + n_start
+        plot_bgd_image(aa, index, row0, col0, img_size)
+        plt.title('t{}:\n{}, {}'.format(index, row0[index], col0[index]));
         plt.axis('off')
+
     plt.subplots_adjust(left=0.05, bottom=0.2, right=0.99, top=0.9, hspace=0.3, wspace=0.1)
+
     print("Format of the titles is 'time: imgrow0, imgcol0'")
     print("Plot bgd images from {} to {}".format(n_start, n_stop))
-    print("Method: {}, ndeque = {}".format(method, table[ok * ok1]['ndeque'][0]))
+    print("Method: {}, ndeque = {}".format(method, table[ok]['ndeque'][0]))
+
     return
 
 
@@ -154,7 +165,7 @@ def plot_bgd_patch(deque_dict, img_number, row0, col0, img_size):
     c_min = col0.min()
     c_max = col0.max() + img_size
     
-    data = np.zeros((c_max - c_min + 1, r_max - r_min + 1))
+    data = -100 * np.ones((c_max - c_min, r_max - r_min))
 
     dr = row0[img_number] - r_min
     dc = col0[img_number] - c_min
@@ -174,17 +185,30 @@ def plot_bgd_patch(deque_dict, img_number, row0, col0, img_size):
     return
 
 
-def plot_bgd_patches(table, slot, n_start, n_stop, img_size, method):
-    ok = table['bgd_type'] == method
-    ok1 = table['slot'] == slot
+def plot_bgd_patches(table, slot, mag, n_start, n_stop, img_size, method):
+    ok1 = table['bgd_type'] == method
+    ok2 = table['slot'] == slot
+    ok3 = table['mag'] == mag
+    ok = ok1 * ok2 * ok3
+    
     fig = plt.figure(figsize=(8.5, 25))
-    for i, aa in enumerate(table[ok * ok1]['deque_dict'][0][n_start:n_stop]):
+
+    for i, aa in enumerate(table[ok]['deque_dict'][0][n_start:n_stop]):
         plt.subplot(12, 10, i + 1)
-        plot_bgd_patch(aa, n_start + i, table['row0'][0], table['col0'][0], img_size)
-        plt.title('t{}:\n{}, {}'.format(n_start + i, table['row0'][0][i], table['col0'][0][i]));
+        row0 = table[ok]['row0'][0]
+        col0 = table[ok]['col0'][0]
+        index = n_start + i        
+        plot_bgd_patch(aa, index, row0, col0, img_size)
+        plt.title('t{}:\n{}, {}'.format(index, row0[index], col0[index]));
         plt.axis('off')
+
     plt.subplots_adjust(left=0.05, bottom=0.2, right=0.99, top=0.9, hspace=0.3, wspace=0.1)
+    
     print("Format of the titles is 'time: imgrow0, imgcol0'")
     print("Plot frames from {} to {}".format(n_start, n_stop))
-    print("Method: {}, ndeque = {}".format(method, table[ok * ok1]['ndeque'][0]))
+    print("Method: {}, ndeque = {}".format(method, table[ok]['ndeque'][0]))
+    
     return
+
+
+

@@ -6,10 +6,11 @@ import numpy.ma as ma
 from astropy.table import Table
 # local imports:
 #import sim_aca_l0 as siml0
-from bgd_classes import *
+import classes
+from classes import *
 
 
-def centroids(slot, slot_data, img_size, bgd_object, hot_pixels=None, nframes=1000):
+def centroids(slot, slot_data, img_size, bgd_object, nframes=1000):
     # Calls:
     #     get_centroids
    

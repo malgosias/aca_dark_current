@@ -3,6 +3,8 @@ import numpy as np
 import collections
 
 
+# Definitions of background classes
+
 # Standard background, current algorithm
 class StandardBgd(object):
     
@@ -167,3 +169,66 @@ class DynamBgd_SigmaClip(DynamBgd_Median):
             m[d_max] = 1
             deque = np.ma.array(deque, mask=m)
         return np.mean(deque)
+
+    
+# Definitions of hot pixel classes
+
+# Hot pixel, constant value
+class StaticHotPixel(object):
+    
+    def __init__(self, val=0, sigma=1, size=1):
+        
+        self.val = val
+        self.sigma = sigma
+        self.size = size
+        self.hp = self.get_hot_pixel()
+                
+    def __repr__(self):
+        return ('<{} val={} sigma={} size={}>'.format(self.__class__.__name__,
+                                                      self.val, self.sigma, self.size))
+    
+    def get_hot_pixel(self):
+        return np.random.normal(loc=self.val, scale=self.sigma, size=self.size)
+    
+
+# Hot pixel flickering between 2 vals at times defined by locs
+class FlickeringHotPixel(object):
+    
+    def __init__(self, vals, sigmas, locs, size=1):
+        
+        if not np.size(vals) == 2 or not np.size(vals) == np.size(sigmas):
+            raise ValueError("FlickeringHotPixel:: vals and sigmas expected to have the same size > 1")
+
+        if not isinstance(locs, collections.Iterable):
+            raise TypeError("FlickeringHotPixel:: locs: expecting an Iterable")
+
+        if not np.size(locs) > 0:
+            raise ValueError("FlickeringHotPixel:: locs expected to have size > 0")
+            
+        self.vals = vals
+        self.sigmas = sigmas
+        self.locs = locs
+        self.size = size
+        self.hp = self.get_hot_pixel()
+
+        
+    def get_hot_pixel(self):        
+        hps = []
+        
+        for val, sigma in zip(self.vals, self.sigmas):
+            hp = StaticHotPixel(val=val, sigma=sigma, size=self.size)
+            hps.append(hp)
+        
+        filt = []
+        locs = [0] + self.locs
+        locs.append(self.size)
+        
+        a = True
+        for i, loc in enumerate(locs[1:]):
+            filt = filt + [a] * (loc - locs[i])
+            a = not a
+                        
+        hp = np.array(filt) * np.array(hps[0].hp) + np.logical_not(filt) * np.array(hps[1].hp)
+
+        return hp
+    
