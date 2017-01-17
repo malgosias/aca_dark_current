@@ -92,8 +92,8 @@ def get_centroids(slot_data, img_size, bgd_object, nframes=None):
             bgd_object.img = frame_data['IMGRAW'][0]
             bgd_object.row0 = frame_data['IMGROW0'][0]
             bgd_object.col0 = frame_data['IMGCOL0'][0]
-        
-        bgd_img = bgd_object.get_background() # 8x8        
+            
+        bgd_img = bgd_object.get_background() # 8x8
         
         bgd_imgs.append(bgd_img)
 

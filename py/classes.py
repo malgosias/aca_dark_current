@@ -27,9 +27,9 @@ class StandardBgd(object):
 #
 #   (currently: option *8x8*, *6x6*, redefine r, c in get_centroids to compute **8x8**)
 #
-#    *8x8*              *6x6*
+#    *8x8*              *6x6* on ground - mouse-bitten corners. On board?
 #
-#      (1)--->
+#      (1)--->            
 #  (3) XXXXXXXX (4)       .XXXX.
 #   |  X......X  |        X....X
 #   |/ X......X  |/       X....X
@@ -76,8 +76,9 @@ class DynamBgd_Median(object):
             self.c = [0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
                       0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7]
         else:
-            self.r = [0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 1, 2, 3, 4, 1, 2, 3, 4]
-            self.c = [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 0, 0, 0, 5, 5, 5, 5]
+            # on ground
+            self.r = [0, 0, 0, 0, 5, 5, 5, 5, 1, 2, 3, 4, 1, 2, 3, 4]
+            self.c = [1, 2, 3, 4, 1, 2, 3, 4, 0, 0, 0, 0, 5, 5, 5, 5]
 
         self.edge_descritpion = '1px outmost edge'
             
@@ -88,7 +89,7 @@ class DynamBgd_Median(object):
                         self.row0, self.col0, self.bgdavg, self.edge_descritpion))
 
 
-    def get_background(self):
+    def get_background(self): # if called >1 deque will be updatad again!
 
         if self.img is None:
             raise ValueError("DarkCurrent_Median_Bgd:: Can't compute background, img is None")
@@ -118,8 +119,8 @@ class DynamBgd_Median(object):
         # 3. If > ndeque elements in a deque, pop the first one (popleft)
     
         # current edge row/col coords in -512:511
-        r_current_edge = self.r + self.row0 * np.ones(len(self.r))
-        c_current_edge = self.c + self.col0 * np.ones(len(self.c))
+        r_current_edge = (self.r + self.row0 * np.ones(len(self.r))).astype(int)
+        c_current_edge = (self.c + self.col0 * np.ones(len(self.c))).astype(int)
     
         edge_vals = self.edge_pixel_vals()
         deque_dict = self.deque_dict
